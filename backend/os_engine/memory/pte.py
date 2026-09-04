@@ -11,14 +11,15 @@ It has the mapping as wel as flags to enforce rules.
 total bytes: 3 bytes -> 24 bits
 20 bits -> physical page number.
 1 bit -> Present flag: if the virtual page is mapped to a physical frame of RAM. 1 if loaded, 0 if not mapper.
-1 bit -> Read/write flag : if the file is read only => 0 , if read and write allowed => 1
+1 bit -> Read/write flag : if the frame is read only => 0 , if read and write allowed => 1
 1 bit -> user/ kernel flag : if accessible to user => 1 , only kernel => 0
-1 bit -> saved for later
+1 bit -> executable flag: if it is executable->1, else 0
 
 
 """
 
 from dataclasses import dataclass
+from sys import executable
 
 
 @dataclass()
@@ -28,6 +29,7 @@ class PTE:
     present_flag: bool | None = None
     read_write_flag: bool | None = None
     user_kernel_flag: bool | None = None
+    executable_flag: bool | None = None
 
     def _initialize_entries_from_block(self, pte_data_block):
         """
@@ -43,6 +45,7 @@ class PTE:
         self.present_flag = bool(flag_bits >> 3)
         self.read_write_flag = bool((flag_bits >> 2) & 1)
         self.user_kernel_flag = bool((flag_bits >> 1) & 1)
+        self.executable_flag = bool(flag_bits & 1)
 
     def construct_from_bytes(self, byte_1: int, byte_2: int, byte_3: int) -> None:
         pte_data_block = (
@@ -60,6 +63,7 @@ class PTE:
         present_flag: bool,
         read_write_flag: bool,
         user_kernel_flag: bool,
+        executable_flag:bool
     ):
         present_flag_bit: int = 1 if present_flag else 0
 
@@ -67,10 +71,13 @@ class PTE:
 
         user_kernel_flag_bit: int = 1 if user_kernel_flag else 0
 
+        executable_flag_bit :int = 1 if executable_flag else 0
+
         pte_data_block = physical_frame_number << 4
         pte_data_block |= present_flag_bit << 3
         pte_data_block |= read_write_flag_bit << 2
         pte_data_block |= user_kernel_flag_bit << 1
+        pte_data_block |= executable_flag_bit
 
         self._initialize_entries_from_block(pte_data_block)
 
