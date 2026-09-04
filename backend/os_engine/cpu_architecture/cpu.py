@@ -23,9 +23,9 @@ class CPUMode(Enum):
 class CPU:
     page_table_pointer: int
     program_counter: int = 0
-    registers: list = field(
-        default_factory=lambda: [0, 0, 0, 0]
-    )  # using field instead of = [0,0,0,0] will avoid all objects pointing to same list.
+    registers: list[int] = field(
+        default_factory=lambda: [0]*32
+    )  # using field instead of = [0,0,0,0,...] will avoid all objects pointing to same list.
 
     flags: Flags = field(default_factory=lambda: Flags())
 
