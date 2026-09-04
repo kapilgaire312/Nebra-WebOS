@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field
 from enum import Enum, auto
 
-from os_engine.opcode_handlers import OPCODE_HANDLERS
+from cpu_architecture.opcode_handlers import OPCODE_HANDLERS
+
 from os_engine.process import Process
 
 

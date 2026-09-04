@@ -3,7 +3,7 @@ A hardware which is responsible for translating virtual memory address to physic
 also enforces the protection of memory by checking flag rules from page table entry.
 """
 
-from os_engine.cpu import CPU, CPUMode
+from os_engine.cpu_architecture.cpu import CPU, CPUMode
 from os_engine.memory.pte import PTE
 from os_engine.memory.ram import RAM
 

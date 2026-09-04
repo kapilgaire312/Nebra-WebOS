@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum, auto
 
-from os_engine.isa import Instruction
+from os_engine.cpu_architecture.isa import Instruction
 
 
 class ProcessState(Enum):

@@ -1,4 +1,5 @@
-from os_engine.isa import Opcode
+from cpu_architecture.isa import Opcode
+
 from os_engine.process import ProcessState
 from os_engine.utils import reg_index
 

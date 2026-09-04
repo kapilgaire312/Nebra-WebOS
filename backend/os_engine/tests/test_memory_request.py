@@ -1,6 +1,6 @@
 import pytest
 
-from os_engine.cpu import CPU
+from os_engine.cpu_architecture.cpu import CPU
 from os_engine.memory.memory_request import MemoryRequest
 from os_engine.memory.pte import PTE
 from os_engine.memory.ram import RAM

@@ -8,7 +8,7 @@ which is then retrieved by CPU and loaded into regiser.
 Here, however we are not yet implementing data or addrtess bus. so we need to call methods directly and return data.
 """
 
-from os_engine.cpu import CPU
+from os_engine.cpu_architecture.cpu import CPU
 from os_engine.memory.mmu import MMU
 from os_engine.memory.ram import RAM
 
