@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 
 from os_engine.cpu_architecture.isa import Instruction
+from os_engine.process.memory_descriptor import MemoryDiscriptor
 
 
 class ProcessState(Enum):
@@ -15,9 +16,9 @@ class ProcessState(Enum):
 @dataclass()
 class Process:
     process_id: int
-    instructions: list[Instruction]
     process_state: ProcessState
     saved_register_values: list
+    memory_descriptor : MemoryDiscriptor
     saved_program_counter_value: int = 0
 
     def transition_to(self, state: ProcessState):
