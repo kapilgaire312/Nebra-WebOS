@@ -32,6 +32,6 @@ class MemoryRegion:
     type: RegionType
 
 
-class MemoryDiscriptor:
+class MemoryDescriptor:
     page_table_pointer: int
     regions: list[MemoryRegion]
