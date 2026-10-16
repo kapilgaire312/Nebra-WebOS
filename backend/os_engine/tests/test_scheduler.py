@@ -1,4 +1,4 @@
-from os_engine.isa import Instruction, Opcode
+from os_engine.cpu_architecture.isa import Instruction, Opcode
 from os_engine.process.model import Process, ProcessState
 from os_engine.scheduler import Scheduler
 

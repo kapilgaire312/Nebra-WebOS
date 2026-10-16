@@ -40,43 +40,29 @@ def test_memory_request():
 
     pt_pointer = cpu.page_table_pointer
 
-    # for pte1
-    bytes_pte1 = pte1.get_pte_bytes()
-    print(bytes_pte1)
-    print(pte1.pte_data_block)
-    for byte in bytes_pte1:
-        ram.write(pt_pointer, byte)
-        pt_pointer += 1
+    for pte in (pte1, pte2, pte3):
+        for byte in pte.get_pte_bytes():
+            ram.write(pt_pointer, byte)
+            pt_pointer += 1
 
-    # for pte2
-    bytes_pte2 = pte2.get_pte_bytes()
-    for byte in bytes_pte2:
-        ram.write(pt_pointer, byte)
-        pt_pointer += 1
-
-    # for pte3
-    bytes_pte3 = pte3.get_pte_bytes()
-    for byte in bytes_pte3:
-        ram.write(pt_pointer, byte)
-        pt_pointer += 1
-
-    print(list(ram.ram_bytearray[:20]))
     # test the memory request
     with pytest.raises(Exception, match="Page fault: Only read allowed."):
         # only read allowed
-        MemoryRequest.write(
+        MemoryRequest.write_data(
             virtual_address=0x00000002, cpu=cpu, ram=ram, byte_to_write=33
         )  # vitrual page number 0, and offset of 2. pte_1. present,read,user
 
     # the byte array initializes valuess to 0 when creating RAM
-    assert 0 == (MemoryRequest.read(virtual_address=0x00000002, cpu=cpu, ram=ram))
+    assert 0 == (
+        MemoryRequest.read_data(virtual_address=0x00000002, cpu=cpu, ram=ram)
+    )
 
     with pytest.raises(Exception, match="Page fault : Kernel level access required."):
-        MemoryRequest.read(
+        MemoryRequest.read_data(
             virtual_address=0x00001002, cpu=cpu, ram=ram
         )  # virtual page no 1 and offset 2. present,write, kernel
 
-    MemoryRequest.write(
+    MemoryRequest.write_data(
         virtual_address=0x00002002, cpu=cpu, ram=ram, byte_to_write=33
     )  # virtaul page no 2, offset 2. present, write, user
-    assert MemoryRequest.read(virtual_address=0x00002002, cpu=cpu, ram=ram) == 33
+    assert MemoryRequest.read_data(virtual_address=0x00002002, cpu=cpu, ram=ram) == 33
