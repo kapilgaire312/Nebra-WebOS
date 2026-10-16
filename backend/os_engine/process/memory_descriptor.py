@@ -31,7 +31,7 @@ class MemoryRegion:
     permissions: RegionPermission
     type: RegionType
 
-
+@dataclass()
 class MemoryDescriptor:
     page_table_pointer: int
     regions: list[MemoryRegion]
