@@ -1,4 +1,4 @@
-from cpu_architecture.isa import Opcode
+from os_engine.cpu_architecture.isa import Opcode
 
 from os_engine.cpu_architecture.utils.set_cpu_flags import set_cpu_arithmetic_flags
 from os_engine.process.model import ProcessState
@@ -6,7 +6,7 @@ from os_engine.process.model import ProcessState
 MASK = 0xFFFFFFFF  # any value written to register needs to be maske to ensure it is 32 bit value.
 
 
-def handle_add(cpu, process, operands: list[int]):
+def handle_add(cpu,  operands: list[int]):
     # r1 = r2 +r3
 
     r1, r2, remaining_16_bits = operands
@@ -19,10 +19,10 @@ def handle_add(cpu, process, operands: list[int]):
     # update the flags
     set_cpu_arithmetic_flags(cpu=cpu, opcode=Opcode.ADD, result=result, op1=r2, op2=r3)
 
-    cpu.program_counter += 1
+    cpu.program_counter += 4
 
 
-def handle_subtract(cpu, process, operands: list[int]):
+def handle_subtract(cpu, operands: list[int]):
     # r1 = r2 - r3
     r1, r2, remaining_16_bits = operands
     r3: int = (remaining_16_bits >> 11) & 0x1F
@@ -36,28 +36,29 @@ def handle_subtract(cpu, process, operands: list[int]):
     set_cpu_arithmetic_flags(
         cpu=cpu, opcode=Opcode.SUBTRACT, result=result, op1=r2, op2=r3
     )
-    cpu.program_counter += 1
+    cpu.program_counter += 4
 
 
-def handle_halt(cpu, process, operands: list):
+def handle_halt(cpu,  operands: list):
     # syscall to kernel, which reclaims its resources. implement later.
-    process.transition_to(ProcessState.TERMINATED)
+   # process.transition_to(ProcessState.TERMINATED)
+    pass
 
 
-def handle_jmp(cpu, process, operands: list):
+def handle_jmp(cpu,  operands: list):
     jump_label = operands.pop()
     cpu.program_counter = jump_label
 
 
 def handle_jz(
-    cpu, process, operands
+    cpu,  operands
 ):  # jumps if the result of previous operation was zero.
     if cpu.flags.zero:
         jump_label = operands.pop()
         cpu.program_counter = jump_label
 
     else:
-        cpu.program_counter += 1
+        cpu.program_counter += 4
 
 
 OPCODE_HANDLERS = {

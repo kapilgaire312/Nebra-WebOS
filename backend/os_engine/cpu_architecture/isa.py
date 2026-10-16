@@ -48,3 +48,15 @@ class Instruction:
     ):
         self.opcode = opcode
         self.operands = [r1, r2, remaining_16_bits]
+
+    #for teseting get bytes from 32 bit instruction
+    def get_bytes(self):
+        instruction_bits = (self.opcode << 26) | (self.operands[0] << 21) | (
+            self.operands[1] << 16
+        ) | self.operands[2]
+        return [
+            (instruction_bits >> 24) & 0xFF,
+            (instruction_bits >> 16) & 0xFF,
+            (instruction_bits >> 8) & 0xFF,
+            instruction_bits & 0xFF,
+        ]

@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
 from enum import Enum, auto
 
-from cpu_architecture.opcode_handlers import OPCODE_HANDLERS
+from os_engine.cpu_architecture.opcode_handlers import OPCODE_HANDLERS
 
 from os_engine.process.model import Process
-
+from os_engine.cpu_architecture.isa import Instruction
 
 @dataclass()
 class Flags:
@@ -31,17 +31,25 @@ class CPU:
 
     mode: CPUMode = CPUMode.USER
 
-    def fetch_one_instruction(self, process):
-        # for now fetch and decode are in the execute until a proper memory mangaement unit is implemented.
-        pass
+    def fetch_one_instruction(self, ram):
+        from os_engine.memory.memory_request import MemoryRequest
 
-    def decode_one_instruction(self):
-        pass
+        return MemoryRequest.read_instruction(
+            virtual_address=self.program_counter, cpu=self, ram=ram
+        )
 
-    def execute_one_instruction(self, process: Process):
-        instruction = process.instructions[self.program_counter]
-        handler = OPCODE_HANDLERS[instruction.opcode]
-        handler(self, process, instruction.operands)
+    def decode_one_instruction(self, instruction: int):
+        # decode the instruction into opcode and operands
+        instruction_obj = Instruction(instruction) 
+        
+        return instruction_obj
+
+
+    def execute_one_instruction(self, instruction_obj: Instruction):
+
+        handler = OPCODE_HANDLERS[instruction_obj.opcode]
+
+        handler(self, instruction_obj.operands)
 
     def increment_one_tick(self):
         pass

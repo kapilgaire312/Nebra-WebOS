@@ -2,8 +2,14 @@
 set the values of zero, negative, carry and overflow cpu flags.
 """
 
-from os_engine.cpu_architecture.cpu import CPU
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from os_engine.cpu_architecture.isa import Opcode
+
+if TYPE_CHECKING:
+    from os_engine.cpu_architecture.cpu import CPU
 
 WORD_BITS = 32
 MASK = 0xFFFFFFFF
