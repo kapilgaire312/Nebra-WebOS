@@ -15,7 +15,7 @@ from os_engine.memory.ram import RAM
 
 class MemoryRequest:
     @staticmethod
-    def read(virtual_address: int, cpu: CPU, ram: RAM):
+    def read_data(virtual_address: int, cpu: CPU, ram: RAM):
         # first get the physical memory address from the virtual_address
 
         physical_address = MMU.translate(
@@ -28,7 +28,7 @@ class MemoryRequest:
         return byte_read
 
     @staticmethod
-    def write(
+    def write_data(
         virtual_address: int,
         cpu: CPU,
         ram: RAM,
@@ -42,3 +42,16 @@ class MemoryRequest:
 
         # store the byte to the ram physical address
         ram.write(address=physical_address, byte=byte_to_write)
+
+    @staticmethod
+    def read_instruction(virtual_address: int, cpu: CPU, ram: RAM):
+        # first get the physical memory address from the virtual_address
+
+        physical_address = MMU.translate(
+            virtual_address=virtual_address, cpu=cpu, ram=ram, write_access=False, execute_access=True
+        )
+
+        # fetch the instruction from the RAM contained in that physical address.
+        instruction_read = ram.read_instruction(physical_address)
+
+        return instruction_read

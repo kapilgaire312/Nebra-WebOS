@@ -16,6 +16,12 @@ class RAM:
 
         return self.ram_bytearray[address]
 
+    def read_instruction(self, address):
+        instruction = 0
+        for byte_offset in range(4):
+            instruction = (instruction << 8) | self.read(address + byte_offset)
+        return instruction
+
     def write(self, address, byte):
         self._check_address_valid(address)
 

@@ -10,7 +10,7 @@ from os_engine.memory.ram import RAM
 
 class MMU:
     @staticmethod
-    def translate(virtual_address: int, cpu: CPU, ram: RAM, write_access: bool):
+    def translate(virtual_address: int, cpu: CPU, ram: RAM, write_access: bool, execute_access: bool = False):
         # page_table_pointer points dirextly to the RAM's physical address
 
         # width of each page table entry is 3 bytes
@@ -22,7 +22,7 @@ class MMU:
             virtual_address >> 12
         )  # bitwise right shift to get first 20 bits
 
-        mask = 111111111111  # 12 1's or 0xFFF
+        mask = 0xFFF
         page_offset: int = virtual_address & mask  # bitwise and to get last 12 bits
 
         # fetch the current page table entry from RAM
@@ -55,6 +55,10 @@ class MMU:
         if write_access and not pte.read_write_flag:
             # page failt, only read allowed.
             raise Exception("Page fault: Only read allowed.")
+
+        if execute_access and not pte.executable_flag:
+            # page failt, only read allowed.
+            raise Exception("Page fault: Execute not allowed.")
 
         physical_memory_address: int = pte.physical_frame_number << 12 | page_offset
         return physical_memory_address
